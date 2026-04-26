@@ -33,9 +33,17 @@ def run_threshold_analysis(
     """Run a simple threshold analysis on a selected numeric column."""
     above_threshold = df[column] > threshold
     count_above = int(above_threshold.sum())
+<<<<<<< HEAD
+    ratio_above = count_above / len(df) if len(df) > 0 else 0.0
+=======
     ratio_above = count_above / len(df)
+>>>>>>> master
 
     result_df = df.copy()
     result_df["above_threshold"] = above_threshold
 
+<<<<<<< HEAD
     return result_df, count_above, ratio_above
+=======
+    return result_df, count_above, ratio_above
+>>>>>>> master
