@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from services.data_validation import build_validation_report
 
 from services.data_analysis import (
     get_dataset_overview,
@@ -49,9 +50,7 @@ else:
 
     overview = get_dataset_overview(df)
     numeric_columns = get_numeric_columns(df)
-
-    overview = get_dataset_overview(df)
-    numeric_columns = get_numeric_columns(df)
+    validation_report = build_validation_report(df)
 
     st.subheader("Dataset Overview")
 
@@ -65,6 +64,26 @@ else:
 
     with col3:
         st.metric("Missing Values", overview["missing_values"])
+
+    st.subheader("Data Validation Report")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric("Duplicated Rows", validation_report["duplicated_rows"])
+
+    with col2:
+        st.metric("Numeric Columns", len(validation_report["numeric_columns"]))
+
+    with col3:
+        st.metric("Non-numeric Columns", len(validation_report["non_numeric_columns"]))
+
+    with st.expander("Show column type details"):
+        st.write("Numeric columns")
+        st.write(validation_report["numeric_columns"])
+
+        st.write("Non-numeric columns")
+        st.write(validation_report["non_numeric_columns"])
 
     st.subheader("Data Preview")
 
