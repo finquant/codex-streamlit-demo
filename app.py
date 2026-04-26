@@ -50,6 +50,9 @@ else:
     overview = get_dataset_overview(df)
     numeric_columns = get_numeric_columns(df)
 
+    overview = get_dataset_overview(df)
+    numeric_columns = get_numeric_columns(df)
+
     st.subheader("Dataset Overview")
 
     col1, col2, col3 = st.columns(3)
@@ -64,6 +67,7 @@ else:
         st.metric("Missing Values", overview["missing_values"])
 
     st.subheader("Data Preview")
+<<<<<<< HEAD
 
     if len(df) < 5:
         st.info("The uploaded CSV file has fewer than 5 rows. Displaying all available rows.")
@@ -119,6 +123,57 @@ else:
 
         st.pyplot(fig)
 
+=======
+    number_of_rows = st.slider(
+        "Number of rows to display",
+        min_value=2,
+        max_value=min(100, len(df)),
+        value=min(10, len(df))
+    )
+    st.dataframe(df.head(number_of_rows))
+
+    st.subheader("Summary Statistics")
+
+    summary_df = get_summary_statistics(df)
+
+    if summary_df.empty:
+        st.warning("No numeric columns were found for summary statistics.")
+    else:
+        st.dataframe(summary_df)
+
+    st.subheader("Visualization")
+
+    if len(numeric_columns) == 0:
+        st.warning("No numeric columns were found in the uploaded file.")
+    else:
+        selected_column = st.selectbox(
+            "Select a numeric column for visualization",
+            numeric_columns
+        )
+
+        chart_type = st.radio(
+            "Select chart type",
+            ["Line chart", "Histogram"],
+            horizontal=True
+        )
+
+        fig, ax = plt.subplots()
+
+        if chart_type == "Line chart":
+            ax.plot(df[selected_column])
+            ax.set_xlabel("Observation")
+            ax.set_ylabel(selected_column)
+            ax.set_title(f"Line Chart of {selected_column}")
+
+        elif chart_type == "Histogram":
+            ax.hist(df[selected_column].dropna(), bins=20)
+            ax.set_xlabel(selected_column)
+            ax.set_ylabel("Frequency")
+            ax.set_title(f"Histogram of {selected_column}")
+
+        st.pyplot(fig)
+
+>>>>>>> master
         st.subheader("Threshold Analysis")
 
         with st.form("threshold_form"):
@@ -154,4 +209,8 @@ else:
             st.subheader("Threshold Result Preview")
             st.dataframe(result_df.head(20))
         else:
+<<<<<<< HEAD
             st.info("Set the threshold parameters and press the button to run the analysis.")
+=======
+            st.info("Set the threshold parameters and press the button to run the analysis.")
+>>>>>>> master
