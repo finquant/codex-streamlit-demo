@@ -15,6 +15,8 @@ from services.return_engine import (
     calculate_log_return
 )
 
+from services.export_engine import convert_dataframe_to_csv
+
 st.set_page_config(
     page_title="Codex Streamlit Demo",
     layout="wide"
@@ -141,6 +143,15 @@ else:
                 ax.set_ylabel(return_column)
 
                 st.pyplot(fig)
+
+                csv_data = convert_dataframe_to_csv(return_df)
+                
+                st.download_button(
+                    label="Download result CSV",
+                    data=csv_data,
+                    file_name="return_result.csv",
+                    mime="text/csv"
+                )
 
             except ValueError as exc:
                 st.error(str(exc))
