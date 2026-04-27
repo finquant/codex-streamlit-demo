@@ -10,6 +10,10 @@ from services.data_analysis import (
     run_threshold_analysis
 )
 
+from services.return_engine import (
+    calculate_simple_return,
+    calculate_log_return
+)
 
 st.set_page_config(
     page_title="Codex Streamlit Demo",
@@ -84,6 +88,62 @@ else:
 
         st.write("Non-numeric columns")
         st.write(validation_report["non_numeric_columns"])
+
+    st.subheader("Return Calculation")
+
+    if len(numeric_columns) == 0:
+        st.warning("No numeric columns are available for return calculation.")
+    else:
+        with st.form("return_form"):
+            price_column = st.selectbox(
+                "Select price column",
+                numeric_columns,
+                key="price_column"
+            )
+
+            return_type = st.radio(
+                "Select return type",
+                ["Simple return", "Log return"],
+                horizontal=True
+            )
+
+            run_return = st.form_submit_button("Calculate return")
+
+        if run_return:
+            try:
+                if return_type == "Simple return":
+                    return_df = calculate_simple_return(
+                        df=df,
+                        price_column=price_column
+                    )
+                    return_column = "simple_return"
+
+                else:
+                    return_df = calculate_log_return(
+                        df=df,
+                        price_column=price_column
+                    )
+                    return_column = "log_return"
+
+                st.success(f"{return_type} calculated from column: {price_column}")
+
+                st.subheader("Return Preview")
+                st.dataframe(
+                    return_df[[price_column, return_column]].head(20)
+                )
+
+                st.subheader("Return Visualization")
+
+                fig, ax = plt.subplots()
+                ax.plot(return_df[return_column])
+                ax.set_title(f"{return_type} from {price_column}")
+                ax.set_xlabel("Observation")
+                ax.set_ylabel(return_column)
+
+                st.pyplot(fig)
+
+            except ValueError as exc:
+                st.error(str(exc))
 
     st.subheader("Data Preview")
 
