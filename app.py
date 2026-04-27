@@ -89,7 +89,7 @@ else:
         st.write("Non-numeric columns")
         st.write(validation_report["non_numeric_columns"])
 
-        st.subheader("Return Calculation")
+    st.subheader("Return Calculation")
 
     if len(numeric_columns) == 0:
         st.warning("No numeric columns are available for return calculation.")
