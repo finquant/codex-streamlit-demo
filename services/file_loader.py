@@ -1,6 +1,8 @@
 import pandas as pd
+import streamlit as st
 
 
-def read_csv_file(uploaded_file) -> pd.DataFrame:
-    """Read an uploaded CSV file into a pandas DataFrame."""
+@st.cache_data
+def load_csv_from_upload(uploaded_file) -> pd.DataFrame:
+    """Load a CSV uploaded through Streamlit's file_uploader."""
     return pd.read_csv(uploaded_file)
