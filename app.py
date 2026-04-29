@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from services.data_validation import build_validation_report
+from services.file_loader import load_csv_from_upload
 
 from services.data_analysis import (
     get_dataset_overview,
@@ -42,7 +43,7 @@ if uploaded_file is None:
     st.info("Please upload a CSV file from the sidebar to begin the analysis.")
 else:
     try:
-        df = pd.read_csv(uploaded_file)
+        df = load_csv_from_upload(uploaded_file)
     except pd.errors.EmptyDataError:
         st.error("The uploaded CSV file is empty. Please upload a CSV file with at least one data row.")
         st.stop()
