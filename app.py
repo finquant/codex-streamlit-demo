@@ -33,12 +33,34 @@ st.markdown(
     """
 )
 
+if "return_df" not in st.session_state:
+    st.session_state["return_df"] = None
+
+if "return_column" not in st.session_state:
+    st.session_state["return_column"] = None
+
+if "return_type" not in st.session_state:
+    st.session_state["return_type"] = None
+
+if "price_column" not in st.session_state:
+    st.session_state["price_column"] = None
+
 st.sidebar.header("Control Panel")
 
 uploaded_file = st.sidebar.file_uploader(
     "Upload CSV file",
     type=["csv"]
 )
+
+st.sidebar.subheader("Debug: Session State")
+
+show_session_state = st.sidebar.checkbox(
+    "Show session_state",
+    value=False
+)
+
+if show_session_state:
+    st.sidebar.write(dict(st.session_state))
 
 if uploaded_file is None:
     st.info("Please upload a CSV file from the sidebar to begin the analysis.")
@@ -130,6 +152,11 @@ else:
                     return_column = "log_return"
 
                 st.success(f"{return_type} calculated from column: {price_column}")
+
+                st.session_state["return_df"] = return_df
+                st.session_state["return_column"] = return_column
+                st.session_state["return_type"] = return_type
+                st.session_state["price_column"] = price_column
 
                 st.subheader("Return Preview")
                 st.dataframe(
