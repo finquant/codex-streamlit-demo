@@ -33,6 +33,7 @@ st.markdown(
     """
 )
 
+
 if "return_df" not in st.session_state:
     st.session_state["return_df"] = None
 
@@ -42,8 +43,8 @@ if "return_column" not in st.session_state:
 if "return_type" not in st.session_state:
     st.session_state["return_type"] = None
 
-if "price_column" not in st.session_state:
-    st.session_state["price_column"] = None
+if "result_price_column" not in st.session_state:
+    st.session_state["result_price_column"] = None
 
 st.sidebar.header("Control Panel")
 
@@ -156,7 +157,7 @@ else:
                 st.session_state["return_df"] = return_df
                 st.session_state["return_column"] = return_column
                 st.session_state["return_type"] = return_type
-                st.session_state["price_column"] = price_column
+                st.session_state["result_price_column"] = price_column
 
                 st.subheader("Return Preview")
                 st.dataframe(
