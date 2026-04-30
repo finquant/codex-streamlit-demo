@@ -17,6 +17,8 @@ from services.return_engine import (
 
 from services.export_engine import convert_dataframe_to_csv
 
+from services.dummy_model import DummyReturnModel
+
 st.set_page_config(
     page_title="Codex Streamlit Demo",
     layout="wide"
@@ -248,3 +250,20 @@ else:
             st.dataframe(result_df.head(20))
         else:
             st.info("Set the threshold parameters and press the button to run the analysis.")
+
+    st.subheader("Model Output (Dummy)")
+
+    if st.session_state["return_df"] is not None:
+        return_df = st.session_state["return_df"]
+        return_column = st.session_state["return_column"]
+
+        model = DummyReturnModel(column=return_column)
+        model.fit(return_df)
+
+        prediction = model.predict()
+
+        st.write("Prediction preview")
+        st.dataframe(prediction.head())
+
+        st.write("Model output frame")
+        st.dataframe(model.to_frame().head())
