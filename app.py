@@ -19,6 +19,11 @@ from services.export_engine import convert_dataframe_to_csv
 
 from services.dummy_model import DummyReturnModel
 
+from services.model_registry import (
+    get_available_models,
+    get_model_class
+)
+
 st.set_page_config(
     page_title="Codex Streamlit Demo",
     layout="wide"
@@ -279,13 +284,19 @@ else:
         else:
             st.info("Set the threshold parameters and press the button to run the analysis.")
 
-    st.subheader("Model Output (Dummy)")
+    st.subheader("Model Output")
 
     if st.session_state["return_df"] is not None:
         return_df = st.session_state["return_df"]
         return_column = st.session_state["return_column"]
 
-        model = DummyReturnModel(column=return_column)
+        selected_model_name = st.selectbox(
+            "Select model",
+            get_available_models()
+        )
+
+        model_class = get_model_class(selected_model_name)
+        model = model_class(column=return_column)
         model.fit(return_df)
 
         prediction = model.predict()
@@ -295,3 +306,5 @@ else:
 
         st.write("Model output frame")
         st.dataframe(model.to_frame().head())
+    else:
+        st.info("Calculate returns first before running a model.")
